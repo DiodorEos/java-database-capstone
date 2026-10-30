@@ -1,63 +1,13 @@
-<!-- patientDashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="../assets/images/logo/logo.png" />
-    <title>PatientDashboard</title>
-    <link rel="stylesheet" href="../assets/css/adminDashboard.css">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/patientDashboard.css">
-    <script src="../js/render.js" defer></script>
-    <script src="../js/util.js" defer></script>
-    <script src="../js/components/header.js" defer></script>
-    <script src="../js/components/footer.js" defer></script>
-    <script type="module" src="../js/components/modals.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer">
+<title>Find a doctor | SmartCare</title>
+<link rel="icon" href="/assets/images/logo/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="/assets/css/patientDashboard.css">
+<script src="/js/util.js" defer></script><script src="/js/render.js" defer></script>
+<script src="/js/components/header.js" defer></script><script src="/js/components/footer.js" defer></script>
+<script type="module" src="/js/patientDashboard.js"></script>
 </head>
-
-<body onload="renderContent()">
-    <div class="container">
-        <div class="wrapper">
-            <div id="header"></div>
-            <main class="main-content">
-                <input type="text" id="searchBar" class="searchBar" placeholder="Search Bar for custom output" />
-                <div class="filter-wrapper">
-                    <select class="filter-select" id="filterTime">
-                        <option value="">Sort by Time</option>
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                    </select>
-                    <select class="filter-select" id="filterSpecialty">
-                        <option value="">Filter by Specialty</option>
-                        <option value="Cardiologist">Cardiologist</option>
-                        <option value="Dermatologist">Dermatologist</option>
-                        <option value="Neurologist">Neurologist</option>
-                        <option value="Pediatrician">Pediatrician</option>
-                        <option value="Orthopedic">Orthopedic</option>
-                        <option value="Gynecologist">Gynecologist</option>
-                        <option value="Psychiatrist">Psychiatrist</option>
-                        <option value="Dentist">Dentist</option>
-                        <option value="Ophthalmologist">Ophthalmologist</option>
-                        <option value="Ent">ENT Specialist</option>
-                        <option value="Urologist">Urologist</option>
-                        <option value="Oncologist">Oncologist</option>
-                        <option value="Gastroenterologist">Gastroenterologist</option>
-                        <option value="General">General Physician</option>
-                    </select>
-                </div>
-                <div id="content"></div>
-            </main>
-            <div id="footer"></div>
-        </div>
-    </div>
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-    <script type="module" src="../js/patientDashboard.js" defer></script>
-</body>
-
-</html>
+<body data-page="patient"><a class="skip-link" href="#main">Skip to content</a><div class="container"><div class="wrapper"><div id="header"></div>
+<main id="main" class="main-content"><div class="page-heading"><p class="eyebrow">CARE THAT FITS YOUR DAY</p><h1>Find your doctor.</h1><p>Browse our specialists. Sign in when you're ready to book.</p></div><section class="filter-wrapper" aria-label="Find a doctor"><label class="search-label" for="searchBar">Doctor name<input type="search" id="searchBar" placeholder="Search by doctor name"></label><label for="filterTime">Consultation time<select id="filterTime"><option value="">Any time</option><option value="AM">Morning (AM)</option><option value="PM">Afternoon (PM)</option></select></label><label for="filterSpecialty">Specialty<select id="filterSpecialty"><option value="">All specialties</option><option value="Cardiologist">Cardiologist</option><option value="Dermatologist">Dermatologist</option><option value="Neurologist">Neurologist</option><option value="Pediatrician">Pediatrician</option><option value="Orthopedist">Orthopedist</option><option value="Gynecologist">Gynecologist</option><option value="Psychiatrist">Psychiatrist</option><option value="Dentist">Dentist</option><option value="Ophthalmologist">Ophthalmologist</option><option value="ENT Specialist">ENT Specialist</option><option value="Urologist">Urologist</option><option value="Oncologist">Oncologist</option><option value="Gastroenterologist">Gastroenterologist</option><option value="General Physician">General Physician</option></select></label></section><div class="results-heading"><h2>Our doctors</h2><span id="resultCount" aria-live="polite"></span></div><p id="pageStatus" role="status"></p><section id="content" class="doctor-grid" aria-label="Doctor directory" aria-live="polite"><p class="empty-state">Loading doctors…</p></section></main><div id="footer"></div></div></div><div id="modal" class="modal" hidden><section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button type="button" id="closeModal" class="close" aria-label="Close dialog">×</button><div id="modal-body"></div></section></div></body></html>
