@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "doctors")
+@Table(name = "doctor")
 public class Doctor {
 
     @Id
@@ -47,8 +47,8 @@ public class Doctor {
 
     @ElementCollection
     @CollectionTable(name = "doctor_available_times", joinColumns = @JoinColumn(name = "doctor_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"doctor_id", "time_slot"}))
-    @Column(name = "time_slot", nullable = false, length = 32)
+            uniqueConstraints = @UniqueConstraint(columnNames = {"doctor_id", "available_times"}))
+    @Column(name = "available_times", nullable = false, length = 32)
     private List<String> availableTimes = new ArrayList<>();
 
     public Doctor() {
