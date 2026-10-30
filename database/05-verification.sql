@@ -1,0 +1,10 @@
+USE cms;
+SHOW TABLES;
+SELECT * FROM doctor LIMIT 5;
+SELECT * FROM doctor_available_times LIMIT 5;
+SELECT * FROM patient LIMIT 5;
+SELECT * FROM appointment ORDER BY appointment_time LIMIT 5;
+SELECT * FROM admin;
+CALL GetDailyAppointmentReportByDoctor('2025-04-15');
+CALL GetDoctorWithMostPatientsByMonth(4, 2025);
+CALL GetDoctorWithMostPatientsByYear(2025);
