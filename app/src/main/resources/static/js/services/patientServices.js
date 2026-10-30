@@ -1,97 +1,13 @@
-// patientServices
 import { API_BASE_URL } from "../config/config.js";
-const PATIENT_API = API_BASE_URL + '/patient'
-
-
-//For creating a patient in db
-export async function patientSignup(data) {
-  try {
-    const response = await fetch(`${PATIENT_API}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json"
-        },
-        body: JSON.stringify(data)
-      }
-    );
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return { success: response.ok, message: result.message }
-  }
-  catch (error) {
-    console.error("Error :: patientSignup :: ", error)
-    return { success: false, message: error.message }
-  }
-}
-
-//For logging in patient
+import { request, mutation, segment } from "./http.js";
+export const patientSignup = data => mutation("/patient", "POST", data);
+// Raw Response retained for compatibility with the lab's login handler.
 export async function patientLogin(data) {
-  console.log("patientLogin :: ", data)
-  return await fetch(`${PATIENT_API}/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  });
-
-
+  try { return await fetch(API_BASE_URL + "/patient/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data), cache: "no-store", referrerPolicy: "no-referrer"}); }
+  catch { throw new Error("Unable to reach the clinic. Please try again."); }
 }
-
-// For getting patient data (name ,id , etc ). Used in booking appointments
-export async function getPatientData(token) {
-  try {
-    const response = await fetch(`${PATIENT_API}/${token}`);
-    const data = await response.json();
-    if (response.ok) return data.patient;
-    return null;
-  } catch (error) {
-    console.error("Error fetching patient details:", error);
-    return null;
-  }
-}
-
-// the Backend API for fetching the patient record(visible in Doctor Dashboard) and Appointments (visible in Patient Dashboard) are same based on user(patient/doctor).
+export async function getPatientData(token) { return (await request(`/patient/${segment(token)}`)).patient; }
 export async function getPatientAppointments(id, token, user) {
-  try {
-    const response = await fetch(`${PATIENT_API}/${id}/${user}/${token}`);
-    const data = await response.json();
-    console.log(data.appointments)
-    if (response.ok) {
-      return data.appointments;
-    }
-    return null;
-  }
-  catch (error) {
-    console.error("Error fetching patient details:", error);
-    return null;
-  }
+  return (await request(`/patient/${segment(id)}/${segment(user)}/${segment(token)}`)).appointments;
 }
-
-export async function filterAppointments(condition, name, token) {
-  try {
-    const response = await fetch(`${PATIENT_API}/filter/${condition}/${name}/${token}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-
-    } else {
-      console.error("Failed to fetch doctors:", response.statusText);
-      return { appointments: [] };
-
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Something went wrong!");
-    return { appointments: [] };
-  }
-}
+export const filterAppointments = (condition, name, token) => request(`/patient/filter/${segment(condition)}/${segment(name)}/${segment(token)}`);

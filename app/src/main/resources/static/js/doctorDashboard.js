@@ -1,54 +1,25 @@
-/*
-  Import getAllAppointments to fetch appointments from the backend
-  Import createPatientRow to generate a table row for each patient appointment
-
-
-  Get the table body where patient rows will be added
-  Initialize selectedDate with today's date in 'YYYY-MM-DD' format
-  Get the saved token from localStorage (used for authenticated API calls)
-  Initialize patientName to null (used for filtering by name)
-
-
-  Add an 'input' event listener to the search bar
-  On each keystroke:
-    - Trim and check the input value
-    - If not empty, use it as the patientName for filtering
-    - Else, reset patientName to "null" (as expected by backend)
-    - Reload the appointments list with the updated filter
-
-
-  Add a click listener to the "Today" button
-  When clicked:
-    - Set selectedDate to today's date
-    - Update the date picker UI to match
-    - Reload the appointments for today
-
-
-  Add a change event listener to the date picker
-  When the date changes:
-    - Update selectedDate with the new value
-    - Reload the appointments for that specific date
-
-
-  Function: loadAppointments
-  Purpose: Fetch and display appointments based on selected date and optional patient name
-
-  Step 1: Call getAllAppointments with selectedDate, patientName, and token
-  Step 2: Clear the table body content before rendering new rows
-
-  Step 3: If no appointments are returned:
-    - Display a message row: "No Appointments found for today."
-
-  Step 4: If appointments exist:
-    - Loop through each appointment and construct a 'patient' object with id, name, phone, and email
-    - Call createPatientRow to generate a table row for the appointment
-    - Append each row to the table body
-
-  Step 5: Catch and handle any errors during fetch:
-    - Show a message row: "Error loading appointments. Try again later."
-
-
-  When the page is fully loaded (DOMContentLoaded):
-    - Call renderContent() (assumes it sets up the UI layout)
-    - Call loadAppointments() to display today's appointments by default
-*/
+import { getAllAppointments } from "./services/appointmentRecordService.js";
+import { createPatientRow } from "./components/patientRows.js";
+const body = document.getElementById("patientTableBody"), picker = document.getElementById("datePicker");
+function today() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+let sequence = 0, timer; picker.value = today();
+function message(text) { const tr = document.createElement("tr"), td = document.createElement("td"); td.colSpan = 7; td.className = "empty-state"; td.textContent = text; tr.append(td); body.replaceChildren(tr); }
+async function loadAppointments() {
+  const current = ++sequence;
+  if (!picker.value) { message("Choose an appointment date."); return; }
+  body.setAttribute("aria-busy","true");
+  try {
+    const data = await getAllAppointments(picker.value, document.getElementById("searchBar").value.trim() || null, localStorage.getItem("token"));
+    if (current !== sequence) return;
+    const appointments = Array.isArray(data) ? data : data.appointments;
+    if (!Array.isArray(appointments)) throw new Error("Unexpected appointment response.");
+    document.getElementById("resultCount").textContent = `${appointments.length} appointments`;
+    if (!appointments.length) { message("No appointments found for the selected date and name."); return; }
+    body.replaceChildren(...appointments.map(a => createPatientRow(a.patient || {id: a.patientId, name: a.patientName, phone: a.patientPhone, email: a.patientEmail}, a.id, a.doctor?.id || a.doctorId, a)));
+  } catch (error) { if (current === sequence) { message(error.message); document.getElementById("resultCount").textContent = ""; } }
+  finally { if (current === sequence) body.setAttribute("aria-busy","false"); }
+}
+document.getElementById("searchBar").addEventListener("input", () => { ++sequence; clearTimeout(timer); timer = setTimeout(loadAppointments,250); });
+picker.addEventListener("change",loadAppointments);
+document.getElementById("todayButton").addEventListener("click", () => { picker.value = today(); loadAppointments(); });
+loadAppointments();

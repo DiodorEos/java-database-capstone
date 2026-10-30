@@ -1,23 +1,12 @@
-// patientRows.js
-export function createPatientRow(patient, appointmentId, doctorId) {
+export function createPatientRow(patient, appointmentId, doctorId, appointment = {}) {
   const tr = document.createElement("tr");
-  console.log("CreatePatientRow :: ", doctorId)
-  tr.innerHTML = `
-      <td class="patient-id">${patient.id}</td>
-      <td>${patient.name}</td>
-      <td>${patient.phone}</td>
-      <td>${patient.email}</td>
-      <td><img src="../assets/images/addPrescriptionIcon/addPrescription.png" alt="addPrescriptionIcon" class="prescription-btn" data-id="${patient.id}"></img></td>
-    `;
-
-  // Attach event listeners
-  tr.querySelector(".patient-id").addEventListener("click", () => {
-    window.location.href = `/pages/patientRecord.html?id=${patient.id}&doctorId=${doctorId}`;
-  });
-
-  tr.querySelector(".prescription-btn").addEventListener("click", () => {
-    window.location.href = `/pages/addPrescription.html?appointmentId=${appointmentId}&patientName=${patient.name}`;
-  });
-
+  const cell = text => { const td = document.createElement("td"); td.textContent = text ?? "—"; tr.append(td); return td; };
+  const identity = cell(""); const record = document.createElement("a");
+  record.textContent = String(patient.id); record.href = "/pages/patientRecord.html?" + new URLSearchParams({id: patient.id, doctorId}); identity.append(record);
+  cell(patient.name); cell(patient.phone); cell(patient.email);
+  cell(appointment.appointmentTime || [appointment.appointmentDate, appointment.appointmentTimeOnly].filter(Boolean).join(" "));
+  cell(appointment.status === 1 ? "Completed" : "Scheduled");
+  const actions = cell(""); const link = document.createElement("a"); link.className = "button secondary";
+  link.textContent = "Prescription"; link.href = "/pages/addPrescription.html?" + new URLSearchParams({appointmentId, patientName: patient.name}); actions.append(link);
   return tr;
 }
