@@ -5,12 +5,11 @@ import com.project.back_end.models.Admin;
 import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AdminRepository;
 import com.project.back_end.repo.PatientRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+@org.springframework.stereotype.Service
 public class Service {
     private final TokenService tokens;
     private final AdminRepository adminRepository;
